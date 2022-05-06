@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,19 +52,28 @@ public class WebScraper {
     }
 
     private static void getFilmInfo(Element el) {
-        Session session = new Session();
-        List<Session> sessionList = new ArrayList<>();
-        session.setCinemaName(el.getElementsByAttributeValue("itemprop", "name").text());
+        final String nameCinema = el.getElementsByAttributeValue("itemprop", "name").text();
+        Elements elSession = document.getElementsByClass("shedule_movie_sessions col col-md-8");
+        String[] arraySession = new String[elSession.size()];
+        int index = 0;
+        for(Element el1 : elSession) {
+            arraySession[index] = el1.getElementsByClass("shedule_session_time").text();
+            index++;
+        }
         Elements elements = document.getElementsByClass("shedule_movie bordered gtm_movie");
+        index = 0;
         for(Element element : elements) {
-            //тут баг!!!!!
-            session.setSessionTime(element.getElementsByClass("shedule_session_time").text());
-            sessionList.add(session);
+        List<Session> sessionList = new ArrayList<>();
             Film film = new Film();
+            Session session = new Session();
             film.setName(element.getElementsByClass("movie_card_header title").text());
-            film.setCompany(element.getElementsByClass("sub_title shedule_movie_text").text());
+            //film.setCompany(element.getElementsByClass("sub_title shedule_movie_text").text());
+            session.setCinemaName(nameCinema);
+            session.setSessionTime(arraySession[index]);
+            sessionList.add(session);
             film.setSessionList(sessionList);
             filmList.add(film);
+            index++;
         }
     }
 }

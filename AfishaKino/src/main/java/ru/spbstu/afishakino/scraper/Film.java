@@ -11,7 +11,7 @@ import java.util.List;
 public class Film {
     private String name;
     //private String contentRate;
-    private String company;
+    //private String company;
     //private String producer;
     //private String genre;
     //private String actors;
