@@ -1,12 +1,10 @@
 package ru.spbstu.afishakino.scraper;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 public class Session {
     private String cinemaName;
     private String sessionTime;

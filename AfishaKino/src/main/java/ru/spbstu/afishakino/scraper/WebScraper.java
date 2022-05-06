@@ -4,76 +4,69 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+@Component
 public class WebScraper {
-    final static private String URL;
-    final static private String CITY_URL;
-    final static private List<Film> filmList;
-    static private Document document;
+    final private static String URL;
+    final private static String CITY_URL;
+    final private static List<Film> filmList;
+    private static Document document;
+    private static Elements elements;
 
     static {
         URL = "https://kinoteatr.ru";
-        CITY_URL = "/raspisanie-kinoteatrov/sankt-peterburg/";
+        CITY_URL = "/kinoafisha/sankt-peterburg/";
         filmList = new ArrayList<>();
     }
 
     public static void main(String[] args) throws IOException {
-        getNameCinemaAndSession(getHrefCinema());
+        List<String> hrefFilmsList = getHrefFilms();
+        for (String hrefFilm : hrefFilmsList) {
+            filmList.add(getFilmInfo(hrefFilm));
+        }
         filmList.forEach(System.out::println);
-        //el.forEach(System.out::println);
     }
 
 
-    private static List<String> getHrefCinema() throws IOException {
+    private static List<String> getHrefFilms() throws IOException {
         document = Jsoup.connect(URL + CITY_URL).get();
-        List<String> hrefCinemaList = new ArrayList<>();
-        Elements elements = document.getElementsByClass("col-md-12 cinema_card");
+        List<String> hrefFilmList = new ArrayList<>();
+        elements = document.getElementsByClass("movie_card_clickable");
         for(Element el : elements) {
-            hrefCinemaList.add(el.getElementsByTag("a").attr("href"));
+            hrefFilmList.add(el.getElementsByTag("a").attr("href"));
         }
-        return hrefCinemaList;
+        return hrefFilmList;
     }
 
-    private static void getNameCinemaAndSession(List<String> hrefCinemaList) throws IOException {
-        for(String href : hrefCinemaList) {
-            document = Jsoup.connect(href).get();
-            Elements elements = document.getElementsByClass("wrap cinema_card_single");
-            for (Element el : elements) {
-                getFilmInfo(el);
-            }
-        }
-    }
-
-    private static void getFilmInfo(Element el) {
-        final String nameCinema = el.getElementsByAttributeValue("itemprop", "name").text();
-        Elements elSession = document.getElementsByClass("shedule_movie_sessions col col-md-8");
-        String[] arraySession = new String[elSession.size()];
-        int index = 0;
-        for(Element el1 : elSession) {
-            arraySession[index] = el1.getElementsByClass("shedule_session_time").text();
-            index++;
-        }
-        Elements elements = document.getElementsByClass("shedule_movie bordered gtm_movie");
-        index = 0;
-        for(Element element : elements) {
+    private static List<Session> getNameCinemaAndSession() {
         List<Session> sessionList = new ArrayList<>();
-            Film film = new Film();
-            Session session = new Session();
-            film.setName(element.getElementsByClass("movie_card_header title").text());
-            //film.setCompany(element.getElementsByClass("sub_title shedule_movie_text").text());
-            session.setCinemaName(nameCinema);
-            session.setSessionTime(arraySession[index]);
-            sessionList.add(session);
-            film.setSessionList(sessionList);
-            filmList.add(film);
-            index++;
+        elements = document.getElementsByClass("cinema");
+        for(Element element : elements) {
+            String nameCinema = element.getElementsByTag("a").text();
+            String sessionTime = element.getElementsByClass("time").text();
+            sessionList.add(new Session(nameCinema, sessionTime));
         }
+        return sessionList;
+    }
+
+
+
+    private static Film getFilmInfo(String hrefFilm) throws IOException {
+        document = Jsoup.connect(hrefFilm).get();
+        elements = document.getElementsByClass("info");
+        String nameTitleFilm = "";
+        List<Session> sessionList = new ArrayList<>();
+        for(Element element : elements) {
+            nameTitleFilm = element.getElementsByAttributeValue("itemprop", "name").first().text();
+            sessionList = getNameCinemaAndSession();
+            break;
+        }
+        return new Film(nameTitleFilm, sessionList);
     }
 }

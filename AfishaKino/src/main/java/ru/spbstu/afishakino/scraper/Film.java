@@ -1,21 +1,22 @@
 package ru.spbstu.afishakino.scraper;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
-    private String name;
-    //private String contentRate;
+    private String nameTitle;
+    //private String country
     //private String company;
-    //private String producer;
-    //private String genre;
-    //private String actors;
     //private String rate;
+    //private String contentRate;
+    //private String genre;
+    //private String producer;
+    //private String actors;
     //private String description;
+    //private String image;
     private List<Session> sessionList;
 }
