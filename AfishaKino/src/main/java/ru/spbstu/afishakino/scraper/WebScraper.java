@@ -15,7 +15,6 @@ import java.util.List;
 public class WebScraper {
     final private static String URL;
     final private static String CITY_URL;
-    final private static List<Film> filmList;
     private static Document document;
     private static Elements elements;
     private static int count;
@@ -32,17 +31,17 @@ public class WebScraper {
     static {
         URL = "https://kinoteatr.ru";
         CITY_URL = "/kinoafisha/sankt-peterburg/";
-        filmList = new ArrayList<>();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static List<Film> getFilmsList() throws IOException {
+        List<Film> filmList = new ArrayList<>();
         List<String> hrefFilmsList = getHrefFilms();
         List<Double> rateFilmsList = getRateFilms();
         List<String> imgFilmsList = getImgFilms();
         for (String hrefFilm : hrefFilmsList) {
           filmList.add(getFilmInfo(hrefFilm, imgFilmsList, rateFilmsList));
         }
-        filmList.forEach(System.out::println);
+        return filmList;
     }
 
 
@@ -66,8 +65,6 @@ public class WebScraper {
         }
         return sessionList;
     }
-
-
 
     private static Film getFilmInfo(String hrefFilm, List<String> imgFilmsList, List<Double> rateFilmsList) throws IOException {
         document = Jsoup.connect(hrefFilm).get();

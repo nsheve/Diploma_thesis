@@ -10,15 +10,15 @@ import java.io.IOException;
 
 @SpringBootApplication
 public class AfishaKinoApplication {
-    //@Autowired
-    //private WebScraper webScraper;
+    @Autowired
+    private WebScraper webScraper;
 
     public static void main(String[] args) {
         SpringApplication.run(AfishaKinoApplication.class, args);
     }
 
-    //@Bean
-    //public void getScraping() throws IOException {
-      //  webScraper.m();
-   // }
+    @Bean
+    public void getScraping() throws IOException {
+        webScraper.getFilmsList().forEach(System.out::println);
+    }
 }
