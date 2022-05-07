@@ -26,8 +26,8 @@ public class WebScraper {
     private static String genre;
     private static String producer;
     private static String actor;
+    private static String dateSessionFilm;
     private static String description;
-    private static String dateSession;
 
     static {
         URL = "https://kinoteatr.ru";
@@ -83,6 +83,7 @@ public class WebScraper {
             description = isDescription(element.getElementsByClass("announce").text());
             country = getCountryFilm();
             sessionList = getNameCinemaAndSession();
+            dateSessionFilm = dateSession();
             break;
         }
         return new Film(nameTitleFilm,
@@ -93,6 +94,7 @@ public class WebScraper {
                 producer,
                 actor,
                 description,
+                dateSessionFilm,
                 imgFilmsList.get(count++),
                 sessionList);
     }
@@ -145,10 +147,10 @@ public class WebScraper {
 
     private static String dateSession() {
         elements = document.getElementsByClass("date");
-        String da = "";
+        String dateSessionFilm = "";
         for(Element element : elements) {
-
+            dateSessionFilm = element.getElementsByClass("date").text();
         }
-        return "";
+        return dateSessionFilm;
     }
 }

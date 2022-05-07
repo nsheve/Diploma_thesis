@@ -9,13 +9,14 @@ import java.util.List;
 @AllArgsConstructor
 public class Film {
     private String nameTitle;
-    private String country; //сделал
-    private double rate; //сделал
-    private int contentRate; //сделал
-    private String genre; //сделал
-    private String producer; //сделал
+    private String country;
+    private double rate;
+    private int contentRate;
+    private String genre;
+    private String producer;
     private String actor;
     private String description;
-    private String image; //сделал
-    private List<Session> sessionList; // сделал
+    private String dateSessionFilm;
+    private String image;
+    private List<Session> sessionList;
 }
