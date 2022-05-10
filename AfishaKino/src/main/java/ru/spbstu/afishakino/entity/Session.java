@@ -17,9 +17,9 @@ public class Session {
     private Long id;
 
     @Column(unique = true)
-    private LocalDateTime dateTime;
+    private String dateTime;
 
-    public Session(LocalDateTime dateTime) {
+    public Session(String dateTime) {
         this.dateTime = dateTime;
     }
 }

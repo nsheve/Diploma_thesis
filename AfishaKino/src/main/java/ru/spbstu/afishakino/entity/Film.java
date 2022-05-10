@@ -18,14 +18,23 @@ public class Film {
 
     @Column(unique = true)
     private String title;
+    @Column(length = 1000)
     private String country;
+    @Column(length = 1000)
     private double rate;
+    @Column(length = 1000)
     private int contentRate;
+    @Column(length = 1000)
     private String genre;
+    @Column(length = 1000)
     private String producer;
+    @Column(length = 1000)
     private String actors;
+    @Column(length = 6000)
     private String description;
+    @Column(length = 1000)
     private String dateSessionTime;
+    @Column(length = 1000)
     private String image;
 
     public Film(String title, String country, double rate, int contentRate, String genre, String producer, String actors, String description, String dateSessionTime, String image) {
