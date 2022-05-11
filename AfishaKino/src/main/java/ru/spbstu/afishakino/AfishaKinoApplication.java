@@ -12,8 +12,6 @@ import ru.spbstu.afishakino.entity.Session;
 import ru.spbstu.afishakino.scraper.WebScraper;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 
