@@ -42,7 +42,6 @@ public class AfishaKinoApplication {
     @Bean
     public void getScraping() throws IOException {
         //webScraper.getFilmsList().forEach(System.out::println); смотрим, правильность данных
-        /*
         webScraper.getFilmsList().forEach((scrapedFilm) -> {
             Optional<Film> filmOptional = filmRepository.findByTitle(scrapedFilm.getNameTitle());
             if (filmOptional.isPresent()) {
@@ -60,7 +59,25 @@ public class AfishaKinoApplication {
                                 scrapedFilm.getImage());
                 filmRepository.save(film);
             }
+            for (var cinemaScraper : scrapedFilm.getSessionList()) {
+                Optional<Cinema> cinemaOptional = cinemaRepository.findByName(cinemaScraper.getCinemaName());
+                if (cinemaOptional.isPresent()) {
+                    cinema = cinemaOptional.get();
+                } else {
+                    cinema = new Cinema(cinemaScraper.getCinemaName());
+                    cinemaRepository.save(cinema);
+                }
+                cinemaScraper.getSessionTime().forEach((time) -> {
+                    Optional<Session> sessionOptional = sessionRepository.findByDateTime(time);
+                    if (sessionOptional.isPresent()) {
+                        sessionOptional.get();
+                    } else {
+                        session = new Session(time);
+                        sessionRepository.save(session);
+                    }
+                    scheduleRepository.save(new Schedule(film, session, cinema));
+                });
+            }
         });
-         */
     }
 }
