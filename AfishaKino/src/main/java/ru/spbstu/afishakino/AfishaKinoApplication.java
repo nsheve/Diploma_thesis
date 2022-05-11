@@ -41,6 +41,8 @@ public class AfishaKinoApplication {
 
     @Bean
     public void getScraping() throws IOException {
+        //webScraper.getFilmsList().forEach(System.out::println); смотрим, правильность данных
+        /*
         webScraper.getFilmsList().forEach((scrapedFilm) -> {
             Optional<Film> filmOptional = filmRepository.findByTitle(scrapedFilm.getNameTitle());
             if (filmOptional.isPresent()) {
@@ -59,5 +61,6 @@ public class AfishaKinoApplication {
                 filmRepository.save(film);
             }
         });
+         */
     }
 }

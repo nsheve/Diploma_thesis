@@ -58,10 +58,15 @@ public class WebScraper {
     private static List<Session> getNameCinemaAndSession() {
         List<Session> sessionList = new ArrayList<>();
         elements = document.getElementsByClass("cinema");
-        for(Element element : elements) {
+        for (Element element : elements) {
             String nameCinema = element.getElementsByTag("a").text();
-            String sessionTime = element.getElementsByClass("time").text();
-            sessionList.add(new Session(nameCinema, sessionTime));
+            //тут не очень красиво, придумать как улучшить
+            Elements els = element.getElementsByClass("time");
+            List<String> sessionTimeList = new ArrayList<>();
+            for (Element el : els) {
+                sessionTimeList.add(el.getElementsByClass("time").text());
+            }
+            sessionList.add(new Session(nameCinema, sessionTimeList));
         }
         return sessionList;
     }
@@ -70,7 +75,7 @@ public class WebScraper {
         document = Jsoup.connect(hrefFilm).get();
         elements = document.getElementsByClass("info");
         List<Session> sessionList = new ArrayList<>();
-        for(Element element : elements) {
+        for (Element element : elements) {
             nameTitleFilm = element.getElementsByAttributeValue("itemprop", "name").first().text();
             String strContentRate = element.getElementsByClass("age").text();
             contentRate = Integer.parseInt(parseString(strContentRate));
@@ -99,7 +104,7 @@ public class WebScraper {
     private static List<String> getImgFilms() {
         List<String> imgFilmsList = new ArrayList();
         elements = document.getElementsByClass("movie_card_image_wrap");
-        for(Element element : elements) {
+        for (Element element : elements) {
             imgFilmsList.add(element.getElementsByAttributeValue("itemprop", "image").attr("src"));
         }
         return imgFilmsList;
@@ -108,7 +113,7 @@ public class WebScraper {
 
     private static List<Double> getRateFilms() {
         List<Double> rateFilmsList = new ArrayList();
-        for(Element element : elements) {
+        for (Element element : elements) {
             String txtRate = element.getElementsByClass("movie_card_stars").text();
             rate = !txtRate.equals("") ? Double.parseDouble(txtRate) : 0.0;
             rateFilmsList.add(rate);
@@ -119,7 +124,7 @@ public class WebScraper {
     private static String getCountryFilm() {
         elements = document.getElementsByAttributeValue("itemprop", "countryOfOrigin");
         String country = "";
-        for(Element element : elements) {
+        for (Element element : elements) {
             country = element.getElementsByAttributeValue("itemprop", "name").first().text();
         }
         return !country.equals("") ? country : "Россия";
@@ -145,7 +150,7 @@ public class WebScraper {
     private static String dateSession() {
         elements = document.getElementsByClass("date");
         String dateSessionFilm = "";
-        for(Element element : elements) {
+        for (Element element : elements) {
             dateSessionFilm = element.getElementsByClass("date").text();
         }
         return dateSessionFilm;
