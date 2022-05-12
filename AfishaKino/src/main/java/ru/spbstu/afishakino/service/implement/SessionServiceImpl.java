@@ -37,7 +37,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session findSessionTime(String time) {
-        Optional<Session> optionalSession = sessionRepository.findByTime(time);
+        Optional<Session> optionalSession = sessionRepository.findByDateTime(time);
         if (optionalSession.isPresent()) {
             return optionalSession.get();
         } else {
