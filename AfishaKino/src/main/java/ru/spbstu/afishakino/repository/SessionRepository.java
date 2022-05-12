@@ -7,6 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SessionRepository extends JpaRepository<Session, Long> {
-    Optional<Session> findByDateTime(String dateTime);
-    List<Session> findAllByDateTimeIsAfterAndDateTimeIsBefore(String dateTime, String endOfDate);
+    Optional<Session> findByTime(String dateTime);
 }
