@@ -52,4 +52,14 @@ public class CinemaServiceImpl implements CinemaService {
     public void deleteCinema(long id) {
         cinemaRepository.delete(findCinemaId(id));
     }
+
+    @Override
+    public Cinema findCinemaName(String name) {
+        Optional<Cinema> optionalCinema = cinemaRepository.findByName(name);
+        if (optionalCinema.isPresent()) {
+            return optionalCinema.get();
+        } else {
+            throw new NotFoundCinemaException("Not found by id");
+        }
+    }
 }
