@@ -131,8 +131,13 @@ public class WebScraper {
     }
 
     private static String parseString(String str) {
-        int index = str.indexOf("+");
-        return str.substring(0, index);
+        if (!str.equals("")) {
+            int index = str.indexOf("+");
+            str = str.substring(0, index);
+        } else {
+            str = "0";
+        }
+        return str;
     }
 
     private static String isProducer(String producer) {
