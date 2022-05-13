@@ -64,7 +64,7 @@ public class WebScraper {
             Elements els = element.getElementsByClass("time");
             List<String> sessionTimeList = new ArrayList<>();
             for (Element el : els) {
-                sessionTimeList.add(el.getElementsByClass("time").text());
+                sessionTimeList.add(parseSessionTime(el.getElementsByClass("time").text()));
             }
             sessionList.add(new Session(nameCinema, sessionTimeList));
         }
@@ -78,7 +78,7 @@ public class WebScraper {
         for (Element element : elements) {
             nameTitleFilm = element.getElementsByAttributeValue("itemprop", "name").first().text();
             String strContentRate = element.getElementsByClass("age").text();
-            contentRate = Integer.parseInt(parseString(strContentRate));
+            contentRate = Integer.parseInt(parseContentRate(strContentRate));
             genre = element.getElementsByAttributeValue("itemprop", "genre").text();
             producer = isProducer(element.getElementsByAttributeValue("itemprop", "director").text());
             actor = isActors(element.getElementsByAttributeValue("itemprop", "actor").text());
@@ -130,7 +130,7 @@ public class WebScraper {
         return !country.equals("") ? country : "Россия";
     }
 
-    private static String parseString(String str) {
+    private static String parseContentRate(String str) {
         int index = str.indexOf("+");
         return !str.equals("") ? str.substring(0, index) : "12";
     }
@@ -155,4 +155,10 @@ public class WebScraper {
         }
         return dateSessionFilm;
     }
+
+    private static String parseSessionTime(String time) {
+        int index = time.indexOf(" ");
+        return time.contains(" ") ? time.substring(0, index) : time;
+    }
+
 }
