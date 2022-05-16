@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import ru.spbstu.afishakino.entity.Schedule;
+import ru.spbstu.afishakino.entity.*;
 import ru.spbstu.afishakino.repository.*;
-import ru.spbstu.afishakino.entity.Cinema;
-import ru.spbstu.afishakino.entity.Film;
-import ru.spbstu.afishakino.entity.Session;
 import ru.spbstu.afishakino.scraper.WebScraper;
 
 import java.io.IOException;
@@ -28,6 +25,8 @@ public class AfishaKinoApplication {
     ScheduleRepository scheduleRepository;
     @Autowired
     SessionRepository sessionRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
     private Film film;
     private Session session;
@@ -35,6 +34,11 @@ public class AfishaKinoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AfishaKinoApplication.class, args);
+    }
+
+    @Bean
+    public void addRole() {
+        roleRepository.save(new Role(ERole.ROLE_USER));
     }
 
     @Bean
