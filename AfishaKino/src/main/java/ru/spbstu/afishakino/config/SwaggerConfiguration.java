@@ -14,7 +14,7 @@ public class SwaggerConfiguration {
         return new OpenAPI()
                 .info(
                         new Info()
-                                .title("Loyalty System Api")
+                                .title("Afisha Api")
                                 .version("3.0.0")
                                 .contact(
                                         new Contact()

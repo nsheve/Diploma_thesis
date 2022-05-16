@@ -1,5 +1,7 @@
 package ru.spbstu.afishakino.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "AuthController", description = "В этом контроллере происходит регестрация и авторизация пользователя")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -44,6 +47,7 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/signin")
+    @Operation(summary = "Авторизация пользователя", description = "Позволяет пользователю зайти и после добавлять в истории фильмы")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -62,6 +66,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @Operation(summary = "Регистрация нового пользователя", description = "Позволяет зарегистрировать пользователя(одна роль для всех - это юзер)")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity

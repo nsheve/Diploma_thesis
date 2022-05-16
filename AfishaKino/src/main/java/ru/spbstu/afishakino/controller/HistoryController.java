@@ -1,5 +1,7 @@
 package ru.spbstu.afishakino.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user/history")
+@Tag(name = "HistoryController", description = "Нужен для показа заказов пользователя, добавления и удаления")
 public class HistoryController {
     private final HistoryService historyService;
 
@@ -24,28 +27,21 @@ public class HistoryController {
 
     @GetMapping("/histories")
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Вывод всех историй, только для зарегистрированных пользователей", description = "Позволяет показать все фильмы пользователя, которые добавил в историю")
     public ResponseEntity<List<History>> listHistory() {
         return new ResponseEntity<>(historyService.listHistory(), HttpStatus.OK);
     }
 
-    @GetMapping("/history/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<History> findHistory(@PathVariable("id") long id) {
-        try {
-            return new ResponseEntity<>(historyService.findHistory(id), HttpStatus.OK);
-        } catch (NotFoundHistoryException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "History not found");
-        }
-    }
-
     @PostMapping(value = "/createHistory", consumes = "application/json", produces = "application/json")
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Добавления фильма, только для зарегистрированных пользователей", description = "Позволяет добавить фильм в историю для просмотра")
     public History createHistory(@RequestBody History newHistory) {
         return historyService.createHistory(newHistory);
     }
 
     @DeleteMapping("/deleteHistory/{id}")
     @PreAuthorize("hasRole('USER')")
+    @Operation(summary = "Удаление истории, только для зарегистрированных пользователей", description = "Удаление пользователем из истории фильм, который хотел посмотреть")
     public void deleteHistory(@PathVariable("id") Long id) {
         try {
             historyService.deleteHistory(id);

@@ -1,5 +1,7 @@
 package ru.spbstu.afishakino.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/afisha")
+@Tag(name = "ScheduleController", description = "по сути в этом контроллере можно смотреть данные о фильме + время сеанса + в каком кинотеатре будет фильм")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -27,16 +30,19 @@ public class ScheduleController {
     }
 
     @GetMapping("/schedules")
+    @Operation(summary = "Получаем всею инфу о расписании фильма", description = "Кратко говоря, получаем все информацию о каждом фильме + его сеансу + в каком кинотетаре")
     public ResponseEntity<List<Schedule>> getAllSchedules() {
         return new ResponseEntity<>(scheduleService.getAllScheduleList(), HttpStatus.OK);
     }
 
     @GetMapping("/schedule/{id}")
+    @Operation(summary = "Получаем по id расписание фильма", description = "Получаем по id, расписание фильма + кинотеатр + информацию о фильме")
     public ResponseEntity findById(@PathVariable long id) {
         return new ResponseEntity(scheduleService.findSchedule(id), HttpStatus.OK);
     }
 
-    @GetMapping("/films/{day}")//Все фильмы(с их сеансами) в определенный день
+    @GetMapping("/films/{day}")
+    @Operation(summary = "Фильмы с их сеансами", description = "Все фильмы(с их сеансами) в определенный день, день у меня хранится в String(если брать наш день, то дата = сегодня иначе число+месяц)")
     public ResponseEntity<List<Schedule>> getFilmsAtCurrentDay(@PathVariable("day") String day) {
         List<Schedule> filteredFilmsAtCurrentDay = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getSession().getDateTime().equals(day)).collect(Collectors.toList());
         if (filteredFilmsAtCurrentDay.isEmpty()) {
@@ -45,7 +51,8 @@ public class ScheduleController {
         return new ResponseEntity<>(filteredFilmsAtCurrentDay, HttpStatus.OK);
     }
 
-    @GetMapping("/filmSessionsById/{id}")//Все сеансы определенного фильма по ID
+    @GetMapping("/filmSessionsById/{id}")
+    @Operation(summary = "Получаем сеансы фильма", description = "Все сеансы определенного фильма по ID")
     public ResponseEntity<List<Session>> getFilmWeekSessionsById(@PathVariable("id") long id) {
         List<Session> filmWeekSessions = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getFilm().getId() == id).map(Schedule::getSession).collect(Collectors.toList());
         if (filmWeekSessions.isEmpty()) {
@@ -54,7 +61,8 @@ public class ScheduleController {
         return new ResponseEntity<>(filmWeekSessions, HttpStatus.OK);
     }
 
-    @GetMapping("/filmSessionsByTitle/{title}")//Все сеансы определенного фильма по title
+    @GetMapping("/filmSessionsByTitle/{title}")
+    @Operation(summary = "Получить сеансы по названию фильма", description = "Все сеансы определенного фильма по title")
     public ResponseEntity<List<Session>> getFilmWeekScheduleByTitle(@PathVariable("title") String title) {
         List<Session> filmWeekSessions = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getFilm().getTitle().equals(title)).map(Schedule::getSession).collect(Collectors.toList());
         if (filmWeekSessions.isEmpty()) {
@@ -63,7 +71,8 @@ public class ScheduleController {
         return new ResponseEntity<>(filmWeekSessions, HttpStatus.OK);
     }
 
-    @GetMapping("/cinemaScheduleById/{id}")//Расписание в данном кинотеатре (по его Id)
+    @GetMapping("/cinemaScheduleById/{id}")
+    @Operation(summary = "Получаем расписание в кинотеатре(по id)", description = "Расписание в данном кинотеатре (по его Id)")
     public ResponseEntity<List<Schedule>> getCinemaSchedule(@PathVariable("id") long id) {
         List<Schedule> filmsInCinema = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getCinema().getId() == id).collect(Collectors.toList());
         if (filmsInCinema.isEmpty()){
@@ -72,7 +81,8 @@ public class ScheduleController {
         return new ResponseEntity<>(filmsInCinema, HttpStatus.OK);
     }
 
-    @GetMapping("/cinemaScheduleByName/{name}")//Расписание в данном кинотеатре (по его названию)
+    @GetMapping("/cinemaScheduleByName/{name}")
+    @Operation(summary = "Получаем расписание в кинотеатре(по Названию)", description = "Расписание в данном кинотеатре (по его названию)")
     public ResponseEntity<List<Schedule>> getCinemaSchedule(@PathVariable("name") String name) {
         List<Schedule> filmsInCinema = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getCinema().getName().equals(name)).collect(Collectors.toList());
         if (filmsInCinema.isEmpty()){
