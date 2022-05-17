@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.spbstu.afishakino.entity.History;
 import ru.spbstu.afishakino.exception.NotFoundHistoryException;
 import ru.spbstu.afishakino.service.HistoryService;
+import ru.spbstu.afishakino.service.implement.JavaMailSenderImpl;
 
 import java.util.List;
 
@@ -18,11 +19,13 @@ import java.util.List;
 @RequestMapping("/user/history")
 @Tag(name = "HistoryController", description = "Нужен для показа заказов пользователя, добавления и удаления")
 public class HistoryController {
+    private final JavaMailSenderImpl javaMailSender;
     private final HistoryService historyService;
 
     @Autowired
-    public HistoryController(HistoryService historyService) {
+    public HistoryController(HistoryService historyService, JavaMailSenderImpl javaMailSender) {
         this.historyService = historyService;
+        this.javaMailSender = javaMailSender;
     }
 
     @GetMapping("/histories")
@@ -36,6 +39,7 @@ public class HistoryController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Добавления фильма, только для зарегистрированных пользователей", description = "Позволяет добавить фильм в историю для просмотра")
     public History createHistory(@RequestBody History newHistory) {
+        javaMailSender.sendEmail(newHistory.getUser(), newHistory.getSchedule());
         return historyService.createHistory(newHistory);
     }
 
