@@ -39,7 +39,7 @@ public class HistoryController {
     @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Добавления фильма, только для зарегистрированных пользователей", description = "Позволяет добавить фильм в историю для просмотра")
     public History createHistory(@RequestBody History newHistory) {
-        javaMailSender.sendEmail(newHistory.getUser(), newHistory.getSchedule());
+        //javaMailSender.sendEmail(newHistory.getUser(), newHistory.getSchedule());
         return historyService.createHistory(newHistory);
     }
 

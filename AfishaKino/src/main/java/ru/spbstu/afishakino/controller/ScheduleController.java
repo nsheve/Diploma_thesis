@@ -53,8 +53,10 @@ public class ScheduleController {
 
     @GetMapping("/filmSessionsById/{id}")
     @Operation(summary = "Получаем сеансы фильма", description = "Все сеансы определенного фильма по ID")
-    public ResponseEntity<List<Session>> getFilmWeekSessionsById(@PathVariable("id") long id) {
-        List<Session> filmWeekSessions = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getFilm().getId() == id).map(Schedule::getSession).collect(Collectors.toList());
+    public ResponseEntity<List<Schedule>> getFilmWeekSessionsById(@PathVariable("id") long id) {
+        List<Schedule> filmWeekSessions = scheduleService.getAllScheduleList().stream()
+                .filter(schedule -> schedule.getFilm().getId() == id)
+                .collect(Collectors.toList());
         if (filmWeekSessions.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Film not found");
         }
@@ -63,8 +65,10 @@ public class ScheduleController {
 
     @GetMapping("/filmSessionsByTitle/{title}")
     @Operation(summary = "Получить сеансы по названию фильма", description = "Все сеансы определенного фильма по title")
-    public ResponseEntity<List<Session>> getFilmWeekScheduleByTitle(@PathVariable("title") String title) {
-        List<Session> filmWeekSessions = scheduleService.getAllScheduleList().stream().filter(schedule -> schedule.getFilm().getTitle().equals(title)).map(Schedule::getSession).collect(Collectors.toList());
+    public ResponseEntity<List<Schedule>> getFilmWeekScheduleByTitle(@PathVariable("title") String title) {
+        List<Schedule> filmWeekSessions = scheduleService.getAllScheduleList().stream()
+                .filter(schedule -> schedule.getFilm().getTitle().equals(title))
+                .collect(Collectors.toList());
         if (filmWeekSessions.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Film not found");
         }

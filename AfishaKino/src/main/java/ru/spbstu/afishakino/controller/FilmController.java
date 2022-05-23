@@ -159,4 +159,25 @@ public class FilmController {
     public ResponseEntity getImgFilm(@PathVariable String title) {
         return new ResponseEntity(filmService.findFilmTitle(title).getImage(), HttpStatus.OK);
     }
+
+    @GetMapping("/filmFilterThreeCriteria")
+    @Operation(summary = "Фильтр по всем категориям", description = "Смотрю все выбранные пользователем категории фильтра и в ответ получает список")
+    public ResponseEntity<List<Film>> filterByAllCriteria(@RequestParam(required = false) String genre,
+                                                          @RequestParam(required = false) String country,
+                                                          @RequestParam(required = false) Double rate) {
+        List<Film> filmsFilterByAllCriteria = filmService.getAllListFilm()
+                .stream()
+                .filter(el -> (genre != null && el.getGenre().contains(genre) && country != null && el.getCountry().contains(country) && rate != null && el.getRate() >= rate)
+                        || (genre == null  && country != null && el.getCountry().contains(country) && rate != null && el.getRate() >= rate)
+                        || (genre != null && el.getGenre().contains(genre) && country == null && rate != null && el.getRate() >= rate)
+                        || (genre != null && el.getGenre().contains(genre) && country != null && el.getCountry().contains(country) && rate == null)
+                        || (genre != null && el.getGenre().contains(genre) && country == null && rate == null)
+                        || (genre == null && country != null && el.getCountry().contains(country) && rate == null)
+                        || (genre == null &&country == null && rate != null && el.getRate() >= rate))
+                .collect(Collectors.toList());
+        if (filmsFilterByAllCriteria.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+        }
+        return new ResponseEntity<>(filmsFilterByAllCriteria, HttpStatus.OK);
+    }
 }
